@@ -19,8 +19,8 @@ export const Header = () => {
             className="w-40 sm:w-60 md:w-64 lg:w-100 h-20 object-cover"
           />
         </div>
-        <div class="flex justify-center items-center">
-          <img src={top3} alt="Top 3" class="w-auto h-20 object-contain" />
+        <div className="flex justify-center items-center">
+          <img src={top3} alt="Top 3" className="w-auto h-20 object-contain" />
         </div>
         <div className="flex justify-center items-center">
           <img

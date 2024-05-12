@@ -1,150 +1,33 @@
-import { useEffect, useState } from 'react';
-import './output.css';
-import { Header } from './Components/Navbar/Header';
-import { RecButton } from './Components/Navbar/RecButton';
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-} from 'recharts';
+import { useState } from "react";
+import "./output.css";
+import { setDialogState } from "./store";
+import { Header } from "./Components/Navbar/Header";
+import { Dialog } from "./Components/Dialog";
+import { Button } from "./Components/Button";
+import { RecButton } from "./Components/Navbar/RecButton";
+import { DashBoard } from "./Components/Dashboard";
 
-const data = [
-  {
-    name: 'Page A',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: 'Page B',
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: 'Page C',
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: 'Page D',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: 'Page E',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: 'Page F',
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: 'Page G',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-  {
-    name: 'Page F',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-  {
-    name: 'Page X',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
 function App() {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    //Implementing the setInterval method
-
-    if (count >= data.length) return;
-    const interval = setInterval(() => {
-      setCount(count + 1);
-      // every one second
-    }, 1000);
-
-    //Clearing the interval
-    return () => clearInterval(interval);
-  }, [count]);
-
   return (
-    <div className="h-screen flex flex-col justify-between relative">
+    <div className="h-screen relative flex flex-col justify-between ">
+      <Dialog/>
       <div>
         <Header />
-        <div className="bg-black h-52 z-50">
+        <div className=" h-52 z-50">
           <div className=" py-10 px-20 ">
             <div className="flex justify-between">
               <h1 className="tracking-tight text-3xl font-bold">Dashboard</h1>
-              <RecButton />
-            </div>
-            <div className="relative mt-4 rounded-lg bg-black py-6 shadow-2xl border border-white sm:px-6 h-[60vh] border-dashed z-50">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  onAnimationStart={() => {
-                    console.log('eo');
+              <div className=" flex">
+                <RecButton/>
+                <Button
+                  label="Edit"
+                  onClick={() => {
+                    setDialogState(true);
                   }}
-                  animationDuration={0}
-                  width={500}
-                  height={300}
-                  // Edw bainoun ta data
-                  data={data.slice(0, count)}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <defs>
-                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f3e00a" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#f3e00a" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#01cbdd" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#01cbdd" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <Tooltip />
-                  <Line
-                    animationDuration={0}
-                    type="monotone"
-                    dataKey="uv"
-                    stroke="#8884d8"
-                    fillOpacity={1}
-                    fill="url(#colorUv)"
-                  />
-                  <Line
-                    animationDuration={0}
-                    type="monotone"
-                    dataKey="pv"
-                    stroke="#82ca9d"
-                    fillOpacity={1}
-                    fill="url(#colorPv)"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+                />
+              </div>
             </div>
+            <DashBoard />
           </div>
         </div>
       </div>

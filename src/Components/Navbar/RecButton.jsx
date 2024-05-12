@@ -1,17 +1,19 @@
 import { useState } from 'react';
+import { setRecordButtonState, useDashStore } from '../../store';
 import { Icon } from '@chakra-ui/react';
 
 export const RecButton = () => {
-  const [isActive, setIsActive] = useState(0);
+  // const [isActive, setIsActive] = useState(0);
+  const {isRecording} = useDashStore((state) => state.recInfo);
 
   return (
     <div
-      className="mr-1 cursor-pointer h-8 w-8 bg-black rounded-xl flex items-center justify-center"
+      className="mr-1 cursor-pointer  px-2 py-1 bg-black rounded-xl flex items-center justify-center"
       onClick={() => {
-        setIsActive(!isActive);
+        setRecordButtonState(!isRecording);
       }}
     >
-      {!isActive ? (
+      {isRecording ? (
         <>
           <Icon viewBox="0 0 200 200" color="white">
             <rect fill="white" x="20" y="20" width="60" height="160" />
@@ -29,5 +31,3 @@ export const RecButton = () => {
     </div>
   );
 };
-
-export default RecButton;
