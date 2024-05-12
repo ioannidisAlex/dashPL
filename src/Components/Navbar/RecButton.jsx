@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { setRecordButtonState, useDashStore } from '../../store';
 import { Icon } from '@chakra-ui/react';
 
