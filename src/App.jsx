@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./output.css";
-import { setDialogState } from "./store";
+import { setDialogState, setZoomedOut, useDashStore } from "./store";
 import { Header } from "./Components/Navbar/Header";
 import { Dialog } from "./Components/Dialog";
 import { Button } from "./Components/Button";
@@ -8,17 +8,26 @@ import { RecButton } from "./Components/Navbar/RecButton";
 import { DashBoard } from "./Components/Dashboard";
 
 function App() {
+  const zoomedIn = useDashStore((state) => state.zoom.zoomedIn);
   return (
     <div className="h-screen relative flex flex-col justify-between ">
-      <Dialog/>
+      <Dialog />
       <div>
         <Header />
         <div className=" h-52 z-50">
           <div className=" py-10 px-20 ">
             <div className="flex justify-between">
               <h1 className="tracking-tight text-3xl font-bold">Dashboard</h1>
+              {zoomedIn && (
+                <Button
+                  label="Zoom Out"
+                  onClick={() => {
+                    setZoomedOut(true);
+                  }}
+                />
+              )}
               <div className=" flex">
-                <RecButton/>
+                <RecButton />
                 <Button
                   label="Edit"
                   onClick={() => {
