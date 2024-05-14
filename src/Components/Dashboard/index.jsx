@@ -16,9 +16,15 @@ import {
 
 export const DashBoard = () => {
   const [count, setCount] = useState(4);
-  const [data, setData] = useState(null);
-  const originalData = useDashStore((state) => state.originalData);
+  
+  const sensorAllData = useDashStore((state) => state.sensorAllData);
+
+  const [data, setData] = useState(sensorAllData.slice(0, count));
+  
+  
   const isReccording = useDashStore((state) => state.recInfo.isRecording);
+
+  const [mouseUped, setMouseUped] = useState(false);
 
   const {
     zoomedIn,
@@ -31,26 +37,19 @@ export const DashBoard = () => {
     bottom2,
     left,
     right,
-    // setRefAreaLeft,
-    // setRefAreaRight,
-    // setLeftRight,
     // resetZoom,
   } = useDashStore((state) => state.zoom);
 
   const prevDeps = useRef([false, "dataMin", "dataMax"]);
 
+  // kateu8eian sto store
   const [recData, setRecData] = useState([]);
 
   useEffect(() => {
-    const initialData = originalData.slice(0, count);
-    setData(initialData);
-  }, []);
-
-  useEffect(() => {
     if (isReccording) {
-      setRecData([...recData, originalData[originalData.length - 1]]);
+      setRecData([...recData, sensorAllData[sensorAllData.length - 1]]);
     }
-  }, [isReccording, originalData]);
+  }, [isReccording, sensorAllData]);
 
   // dummy data
   useEffect(() => {
@@ -60,15 +59,15 @@ export const DashBoard = () => {
       setCount(count + 1);
       // every one second
       setDataAppending({
-        name: `${originalData.length + 1}`,
+        name: `${sensorAllData.length + 1}`,
         uv: Math.floor(
           Math.random() * (1800 + (count % 5 === 0 ? 4000 : 0)) + 5000
         ),
         pv: Math.floor(Math.random() * 1800 + 5000),
         amt: Math.floor(Math.random() * 8000 - 2000),
       });
-    }, 7000);
-    console.log(originalData);
+    }, 2500);
+    console.log(sensorAllData);
 
     //Clearing the interval
     return () => clearInterval(interval);
@@ -76,29 +75,29 @@ export const DashBoard = () => {
 
   useEffect(() => {
     if (zoomedOut && !zoomedIn) {
-        setData(originalData);
+        setData(sensorAllData);
         setLeftRight("dataMin", "dataMax");
         //resetZoom();
         console.log("datachanged And out mode activated");
     }
-  }, [zoomedOut, originalData]);
+  }, [zoomedOut, sensorAllData]);
 
-  const [mouseUped, setMouseUped] = useState(false);
-  const zoom = () => {
-    console.log(refAreaLeft, refAreaRight)
-    if (refAreaLeft < refAreaRight) {
-      setData(
-        originalData.filter(
-          (entry) => entry.name >= refAreaLeft && entry.name <= refAreaRight
-        )
-      );
-      //[newLeft, newRight] = [refAreaRight, refAreaLeft];
-      setLeftRight(refAreaLeft, refAreaRight);
-      console.log("zooming");
-      setZoomedIn(true);
-    }
-  };
+
   useEffect(() => {
+    function zoom() {
+      console.log(refAreaLeft, refAreaRight)
+      if (refAreaLeft < refAreaRight) {
+        setData(
+          sensorAllData.filter(
+            (entry) => entry.name >= refAreaLeft && entry.name <= refAreaRight
+          )
+        );
+        setLeftRight(refAreaLeft, refAreaRight);
+        console.log("zooming");
+        setZoomedIn(true);
+      }
+    }
+    console.log(prevDeps.current);
     if (
       prevDeps.current[0] !== mouseUped &&
       prevDeps.current[1] !== refAreaLeft &&
@@ -131,8 +130,6 @@ export const DashBoard = () => {
           animationDuration={0}
           width={500}
           height={300}
-          //data entry
-          //data={data.slice(0, count)}
           data={data}
           onMouseDown={(e) => setRefAreaLeft(e.activeLabel)}
           onMouseMove={(e) => refAreaLeft && setRefAreaRight(e.activeLabel)}
@@ -165,26 +162,32 @@ export const DashBoard = () => {
             className="select-none"
             allowDataOverflow
             domain={[bottom, top]}
+            yAxisId="5"
             type="number"
           />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
-          {/* <Line
+          <Line
             animationDuration={0}
             type="linear"
             dataKey="amt"
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorUv)"
+            xAxisId="0"
+            yAxisId="5"
           />
-          <Line
+          {/* <Line
             animationDuration={0}
             type="linear"
             dataKey="pv"
             stroke="#82ca9d"
             fillOpacity={1}
             fill="url(#colorPv)"
-          /> */}
+            xAxisId="0"
+            yAxisId="5"
+            
+          />
           <Line
             animationDuration={0}
             type="linear"
@@ -192,10 +195,13 @@ export const DashBoard = () => {
             stroke="#82ca9d"
             fillOpacity={1}
             fill="url(#colorPv)"
-            xAxis="0"
-          />
+            xAxisId="0"
+            yAxisId="5"
+          /> */}
           {refAreaLeft && refAreaRight ? (
             <ReferenceArea
+              xAxisId="0"
+              yAxisId="5"
               x1={refAreaLeft}
               x2={refAreaRight}
               strokeOpacity={0.3}

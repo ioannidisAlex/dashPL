@@ -5,7 +5,7 @@ import { create } from "zustand";
 // };
 
 export const useDashStore = create(() => ({
-  originalData: [
+  sensorAllData: [
     {
       name: "1",
       uv: 4000,
@@ -55,9 +55,10 @@ export const useDashStore = create(() => ({
   },
 }));
 
+//set appendeddata
 export const setDataAppending = (newdata) => {
   return useDashStore.setState((state) => ({
-    originalData: [...state.originalData, newdata],
+    sensorAllData: [...state.sensorAllData, newdata],
   }));
 };
 
@@ -65,9 +66,9 @@ export const setZoomedIn = (zoomedIn) => {
     return useDashStore.setState(() => ({ zoom: { zoomedIn: zoomedIn } }));
 };
 
-// export const setZoomedOut = (zoomedOut) => {
-//     return useDashStore.setState(() => ({ zoom: { zoomedOut: zoomedOut } }));
-// };
+export const setZoomedOut = (zoomedOut) => {
+    return useDashStore.setState(() => ({ zoom: { zoomedOut: zoomedOut } }));
+};
 
 export const setDialogState = (isOpen) => {
   return useDashStore.setState(() => ({ dialogIsOpen: isOpen }));
