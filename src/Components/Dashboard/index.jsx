@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDashStore } from "../../store";
-import { setDataAppending } from "../../store";
+import { setAppendedData } from "../../store";
+import { setRecAppendedData } from "../../store";
 import { setZoomedIn } from "../../store";
 import { setLeftRight, setRefAreaLeft, setRefAreaRight } from "../../store";
 import {
@@ -15,13 +16,13 @@ import {
 } from "recharts";
 
 export const DashBoard = () => {
-  const [count, setCount] = useState(4);
-  
-  const sensorAllData = useDashStore((state) => state.sensorAllData);
+  const [newData, setNewData] = useState({});
 
-  const [data, setData] = useState(sensorAllData.slice(0, count));
-  
-  
+  const sensorAllData = useDashStore((state) => state.sensorData.sensorAllData);
+
+  const [data, setData] = useState(sensorAllData.slice(0, 4));
+
+  const recData = useDashStore((state) => state.recInfo.recData);
   const isReccording = useDashStore((state) => state.recInfo.isRecording);
 
   const [mouseUped, setMouseUped] = useState(false);
@@ -42,51 +43,43 @@ export const DashBoard = () => {
 
   const prevDeps = useRef([false, "dataMin", "dataMax"]);
 
-  // kateu8eian sto store
-  const [recData, setRecData] = useState([]);
-
+  // creation of dummy data
   useEffect(() => {
-    if (isReccording) {
-      setRecData([...recData, sensorAllData[sensorAllData.length - 1]]);
-    }
-  }, [isReccording, sensorAllData]);
-
-  // dummy data
-  useEffect(() => {
-    // if activatedRecButton === ??
-    // }
     const interval = setInterval(() => {
-      setCount(count + 1);
-      // every one second
-      setDataAppending({
+      setNewData({
         name: `${sensorAllData.length + 1}`,
         uv: Math.floor(
-          Math.random() * (1800 + (count % 5 === 0 ? 4000 : 0)) + 5000
+          Math.random() * (1800 + (Math.floor(Math.random()*5) % 5 === 0 ? 4000 : 0)) + 5000
         ),
         pv: Math.floor(Math.random() * 1800 + 5000),
         amt: Math.floor(Math.random() * 8000 - 2000),
       });
     }, 2500);
     console.log(sensorAllData);
-
-    //Clearing the interval
     return () => clearInterval(interval);
-  }, [count]);
+  }, [newData]);
 
   useEffect(() => {
+    if (Object.keys(newData).length > 0) {
+      setAppendedData(newData);
+    }
+  }, [newData]);
+
+  useEffect(() => {
+    console.log("useEffect 3rd")
     if (zoomedOut && !zoomedIn) {
-        setData(sensorAllData);
-        setLeftRight("dataMin", "dataMax");
-        //resetZoom();
-        console.log("datachanged And out mode activated");
+      setData(sensorAllData);
+      setLeftRight("dataMin", "dataMax");
+      //resetZoom();
+      console.log("datachanged And out mode activated");
     }
   }, [zoomedOut, sensorAllData]);
 
-
   useEffect(() => {
     function zoom() {
-      console.log(refAreaLeft, refAreaRight)
+      console.log(refAreaLeft, refAreaRight);
       if (refAreaLeft < refAreaRight) {
+        setZoomedIn(true);
         setData(
           sensorAllData.filter(
             (entry) => entry.name >= refAreaLeft && entry.name <= refAreaRight
@@ -94,7 +87,6 @@ export const DashBoard = () => {
         );
         setLeftRight(refAreaLeft, refAreaRight);
         console.log("zooming");
-        setZoomedIn(true);
       }
     }
     console.log(prevDeps.current);
@@ -200,11 +192,11 @@ export const DashBoard = () => {
           /> */}
           {refAreaLeft && refAreaRight ? (
             <ReferenceArea
-              xAxisId="0"
-              yAxisId="5"
               x1={refAreaLeft}
               x2={refAreaRight}
               strokeOpacity={0.3}
+              xAxisId="0"
+              yAxisId="5"
             />
           ) : null}
         </LineChart>

@@ -5,6 +5,12 @@ export const RecButton = () => {
   // const [isActive, setIsActive] = useState(0);
   const {isRecording} = useDashStore((state) => state.recInfo);
 
+  // useEffect(() => {
+  //   if (isReccording) {
+  //     setRecAppendedData([...recData, newSimulatedData]);
+  //   }
+  // }, [isReccording, sensorAllData]);
+
   return (
     <div
       className="mr-1 cursor-pointer  px-2 py-1 bg-black rounded-xl flex items-center justify-center"
