@@ -19,7 +19,7 @@ export const RecButton = () => {
     <>
       { (isRecording || recData.length == 0) ? (
         <div
-          className="mr-1 cursor-pointer  px-2 py-1 bg-black rounded-xl flex items-center justify-center"
+          className="mr-1 cursor-pointer  px-2 py-1 rounded-xl flex items-center justify-center" style={{ borderColor: 'gold', borderWidth: '0.5px' }}
           onClick={() => {
             setRecordButtonState(!isRecording);
           }}
@@ -27,8 +27,8 @@ export const RecButton = () => {
           {isRecording ? (
             <>
               <Icon viewBox="0 0 200 200" color="white">
-                <rect fill="white" x="20" y="20" width="60" height="160" />
-                <rect fill="white" x="124" y="20" width="60" height="160" />
+                <rect fill="black" x="20" y="20" width="60" height="160" />
+                <rect fill="black" x="124" y="20" width="60" height="160" />
               </Icon>
             </>
           ) : (
