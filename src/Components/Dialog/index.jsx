@@ -27,10 +27,10 @@ export const Dialog = () => {
               leaveFrom="opacity-100 transform-[scale(100%)]"
               leaveTo="opacity-0 transform-[scale(95%)]"
             >
-              <DialogPanel className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl">
+              <DialogPanel className="w-full max-w-md rounded-xl bg-black p-6 backdrop-blur-2xl">
                 <DialogTitle
                   as="h3"
-                  className="text-base/7 font-medium text-white"
+                  className="text-base/7 font-medium text-white/50"
                 >
                   Payment successful
                 </DialogTitle>

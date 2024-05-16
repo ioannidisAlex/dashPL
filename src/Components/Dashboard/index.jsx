@@ -112,7 +112,7 @@ export const DashBoard = () => {
   };
 
   return (
-    <div className=" mt-4 rounded-lg bg-black py-6 shadow-2xl border border-white sm:px-6 h-[60vh] border-dashed z-50">
+    <div className="z-50 mt-4 rounded-lg bg-white py-6 shadow-2xl border border-black sm:px-6 h-[60vh] border-dashed">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           onAnimationStart={() => {}}
@@ -164,7 +164,7 @@ export const DashBoard = () => {
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorUv)"
-            dot={{ strokeWidth: 0.5, stroke:"#fff" , r: 4.3 - (3.1 * (1 - Math.exp(-0.05 * data.length))) }}
+            dot={{ strokeWidth: 0.2, stroke:"#555" , r: 4.3 - (3.1 * (1 - Math.exp(-0.05 * data.length))) }}
             xAxisId="0"
             yAxisId="5"
           />
