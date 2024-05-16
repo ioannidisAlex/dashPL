@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <div
       className="flex w-full justify-between"
-      style={{ backgroundColor: "#1a192c" }}
+      style={{ backgroundColor: "#1a192c", paddingTop: "0.6rem", paddingBottom: "1.2rem" }}
     >
       <img src={top1} alt="Top 1" viewBox="0 0 200 50" className="w-20 h-20" />
       <div></div>

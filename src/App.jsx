@@ -49,17 +49,17 @@ function App() {
       <footer>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1220 280"
+          viewBox="0 0 1220 240"
           className="w-full z-20"
         >
           <defs>
-            {/* <linearGradient id="gradient" gradientTransform="rotate(90)">
+            <linearGradient id="gradient" gradientTransform="rotate(90)">
               <stop offset="0%" stopColor="#1a192c" stopOpacity="0.2" />
               <stop offset="10%" stopColor="#1a192c" stopOpacity="0.25" />
-              <stop offset="20%" stopColor="#1a192c" stopOpacity="0.30" />
+              <stop offset="20%" stopColor="#1a192c" stopOpacity="0.05" />
               <stop offset="30%" stopColor="#1a192c" stopOpacity="0.6" />
               <stop offset="40%" stopColor="#1a192c" stopOpacity="1" />
-            </linearGradient> */}
+            </linearGradient>
           </defs>
           <path
             className="h-20 z-20"
