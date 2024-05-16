@@ -1,11 +1,6 @@
 import { useState } from "react";
 import "./output.css";
-import {
-  setDialogState,
-  setZoomedOut,
-  setClearRecData,
-  useDashStore,
-} from "./store";
+import { setDialogState, setZoomedOut, useDashStore } from "./store";
 import { Header } from "./Components/Navbar/Header";
 import { Dialog } from "./Components/Dialog";
 import { Button } from "./Components/Button";
@@ -14,7 +9,6 @@ import { DashBoard } from "./Components/Dashboard";
 
 function App() {
   const zoomedIn = useDashStore((state) => state.zoom.zoomedIn);
-  const recInfo = useDashStore((state) => state.recInfo);
   return (
     <div className="h-screen relative flex flex-col justify-between ">
       <Dialog />
@@ -33,19 +27,8 @@ function App() {
                 />
               )}
               <div className=" flex">
-                {recInfo.recData.length == 0 ? (
-                  <RecButton />
-                ) : (
-                  <div className="flex">
-                    <Button
-                      label="Clear"
-                      onClick={() => {
-                        setClearRecData();
-                      }}
-                    />
-                    <Button label="Export" onclick={() => {;}} />
-                  </div>
-                )}
+                <RecButton />
+                
                 <Button
                   label="Edit"
                   onClick={() => {

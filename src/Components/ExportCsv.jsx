@@ -1,19 +1,24 @@
 import React from "react";
-import { useJsonToCsv } from "react-json-to-csv";
-import { useDashStore } from "../store";
 import { Button } from "./Button";
+import { useJsonToCsv } from "react-json-csv";
+import { useDashStore } from "../store";
 
 export const ExportCSV = () => {
   const { saveAsCsv } = useJsonToCsv();
-  // const filename = "values";
-  // const fields = Object.keys(data[0]);
-  const data = useDashStore((state) => state.sensorData.sensorAllData);
+  const kata = useDashStore((state) => state.recInfo.recData);
+  const filename = "values";
+  const fields = { "name": "N", "amt": "Temp"};
 
-  useEffect(() => {
-    if (isReccording) {
-      setRecAppendedData([...recData, sensorAllData[sensorAllData.length - 1]]);
-    }
-  }, [isReccording, sensorAllData]);
-
-  return <Button onClick={handleExport}>Download CSV</Button>;
+  return (
+    <Button label="Download Csv" onClick={() => saveAsCsv({
+      data: kata.map((d) => {
+        return {
+          name: d.name,
+          amt: d.amt,
+        };
+      }),
+      fields: fields,
+      filename: filename,
+    })}>ALef</Button>
+  );
 };

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDashStore } from "../../store";
-import { setAppendedData } from "../../store";
-import { setRecAppendedData } from "../../store";
+import { setSensorData, setAppendedData } from "../../store";
 import { setZoomedIn } from "../../store";
 import { setLeftRight, setRefAreaLeft, setRefAreaRight } from "../../store";
 import {
@@ -46,8 +45,9 @@ export const DashBoard = () => {
   // creation of dummy data
   useEffect(() => {
     const interval = setInterval(() => {
+      console.log(sensorAllData.length + 1);
       setNewData({
-        name: `${sensorAllData.length + 1}`,
+        name: sensorAllData.length + 1, //`${
         uv: Math.floor(
           Math.random() * (1800 + (Math.floor(Math.random()*5) % 5 === 0 ? 4000 : 0)) + 5000
         ),
@@ -57,27 +57,26 @@ export const DashBoard = () => {
     }, 2500);
     console.log(sensorAllData);
     return () => clearInterval(interval);
-  }, [newData]);
+  }, [sensorAllData.length]);
 
   useEffect(() => {
     if (Object.keys(newData).length > 0) {
+      setSensorData(newData);
       setAppendedData(newData);
     }
-  }, [newData]);
+  }, [newData, setSensorData, setAppendedData]);
 
   useEffect(() => {
-    console.log("useEffect 3rd")
     if (zoomedOut && !zoomedIn) {
       setData(sensorAllData);
       setLeftRight("dataMin", "dataMax");
       //resetZoom();
       console.log("datachanged And out mode activated");
     }
-  }, [zoomedOut, sensorAllData]);
+  }, [zoomedOut, sensorAllData, zoomedIn]);
 
   useEffect(() => {
     function zoom() {
-      console.log(refAreaLeft, refAreaRight);
       if (refAreaLeft < refAreaRight) {
         setZoomedIn(true);
         setData(
@@ -86,10 +85,8 @@ export const DashBoard = () => {
           )
         );
         setLeftRight(refAreaLeft, refAreaRight);
-        console.log("zooming");
       }
     }
-    console.log(prevDeps.current);
     if (
       prevDeps.current[0] !== mouseUped &&
       prevDeps.current[1] !== refAreaLeft &&
@@ -148,6 +145,7 @@ export const DashBoard = () => {
             allowDataOverflow
             dataKey="name"
             domain={[left, right]}
+            type="number"
             xAxisId="0"
           />
           <YAxis
@@ -166,6 +164,7 @@ export const DashBoard = () => {
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorUv)"
+            dot={{ strokeWidth: 0.5, stroke:"#fff" , r: 4.3 - (3.1 * (1 - Math.exp(-0.05 * data.length))) }}
             xAxisId="0"
             yAxisId="5"
           />
@@ -178,7 +177,6 @@ export const DashBoard = () => {
             fill="url(#colorPv)"
             xAxisId="0"
             yAxisId="5"
-            
           />
           <Line
             animationDuration={0}
@@ -190,12 +188,11 @@ export const DashBoard = () => {
             xAxisId="0"
             yAxisId="5"
           /> */}
-          {refAreaLeft && refAreaRight ? (
+          {refAreaLeft && refAreaRight > refAreaLeft ? (
             <ReferenceArea
               x1={refAreaLeft}
               x2={refAreaRight}
               strokeOpacity={0.3}
-              xAxisId="0"
               yAxisId="5"
             />
           ) : null}
