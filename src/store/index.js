@@ -6,39 +6,61 @@ import { create } from "zustand";
 
 export const useDashStore = create(() => ({
   sensorData: {
-    newData: null,
-    sensorAllData: [
+    lines: [
       {
-        name: 1,
-        uv: 4000,
-        pv: 2400,
-        amt: 2400,
+        name: 'Line 1',
+        index: 0,
+        data: [
+          {
+            name: 1,
+            uv: 4000,
+            pv: 2400,
+            amt: 2401,
+          },
+          {
+            name: 2,
+            uv: 3000,
+            pv: 1398,
+            amt: 2210,
+          },
+          {
+            name: 3,
+            uv: 2000,
+            pv: 6800,
+            amt: 2290,
+          },
+          {
+            name: 4,
+            uv: 2780,
+            pv: 3908,
+            amt: 2025,
+          },
+          {
+            name: 5,
+            uv: 2780,
+            pv: 3908,
+            amt: 3001,
+          },
+        ],
+        showLine: true,
+        newData: null,
       },
       {
-        name: 2,
-        uv: 3000,
-        pv: 1398,
-        amt: 2210,
+        name: 'Line 2',
+        index: 1,
+        data: [],
+        showLine: true,
+        newData: null,
       },
       {
-        name: 3,
-        uv: 2000,
-        pv: 6800,
-        amt: 2290,
-      },
-      {
-        name: 4,
-        uv: 2780,
-        pv: 3908,
-        amt: 2000,
-      },
-      {
-        name: 5,
-        uv: 2780,
-        pv: 3908,
-        amt: 3000,
+        name: 'Line 3',
+        index: 2,
+        data: [],
+        showLine: true,
+        newData: null,
       },
     ],
+    lineCount: 3,
   },
   dialogIsOpen: false,
   recInfo: {
@@ -57,24 +79,40 @@ export const useDashStore = create(() => ({
     top2: "dataMax+20",
     bottom2: "dataMin-20",
     animation: true,
-    // setRefAreaLeft: (refAreaLeft) => set({ refAreaLeft }),// setRefAreaLeft: (refAreaLeft) => set({ refAreaLeft }),
-    // setRefAreaRight: (refAreaRight) => set({ refAreaRight }),
-    // setLeftRight: (left, right) => set({ left, right }),
-    //resetZoom: () => set({ refAreaLeft: '', refAreaRight: '', ...initialState }),
   },
 }));
 
-export const setSensorData = (newdata) => {
-  return useDashStore.setState((state) => ({
-    sensorData: { ...state.sensorData, newData: newdata },
-  }));
+export const updateLineData = (newdata, lineIndex) => {
+  return useDashStore.setState((state) => {
+    const updatedLine = [...state.sensorData.lines];
+    updatedLine[lineIndex] = { ...updatedLine[lineIndex], newData: newdata };
+    return { sensorData: { ...state.sensorData, lines: updatedLine } };
+  });
 };
 
-export const setAppendedData = (newdata) => {
+export const setAppendedData = (newdata, lineIndex) => {
+  return useDashStore.setState((state) => {
+    const updatedLine = [...state.sensorData.lines];
+    updatedLine[lineIndex].data = [...updatedLine[lineIndex].data, newdata ];
+    return { sensorData: { ...state.sensorData, lines: updatedLine } };
+  });
+};
+
+export const addLine = () => {
   return useDashStore.setState((state) => ({
     sensorData: {
       ...state.sensorData,
-      sensorAllData: [...state.sensorData.sensorAllData, newdata],
+      lines: [
+        ...state.sensorData.lines,
+        {
+          name: `Line ${state.sensorData.lineCount + 1}`,
+          index: state.sensorData.lineCount,
+          data: [],
+          newData: null,
+          showLine: true,
+        },
+      ],
+      lineCount: state.sensorData.lineCount + 1,
     },
   }));
 };

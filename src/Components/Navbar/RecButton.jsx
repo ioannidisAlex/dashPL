@@ -6,7 +6,7 @@ import { ExportCSV } from "../ExportCsv";
 
 export const RecButton = () => {
   const { isRecording, recData } = useDashStore((state) => state.recInfo);
-  const { newData } = useDashStore((state) => state.sensorData);
+  const { newData } = useDashStore((state) => state.sensorData.lines[0]);
 
   useEffect(() => {
     console.log("newData", newData )

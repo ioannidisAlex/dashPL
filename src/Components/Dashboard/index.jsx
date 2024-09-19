@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDashStore } from "../../store";
-import { setSensorData, setAppendedData } from "../../store";
+import { updateLineData, setAppendedData } from "../../store";
 import { setZoomedIn } from "../../store";
 import { setLeftRight, setRefAreaLeft, setRefAreaRight } from "../../store";
 import {
@@ -17,9 +17,12 @@ import {
 export const DashBoard = () => {
   const [newData, setNewData] = useState({});
 
-  const sensorAllData = useDashStore((state) => state.sensorData.sensorAllData);
-
-  const [data, setData] = useState(sensorAllData.slice(0, 4));
+  const sensorAllData = useDashStore((state) => state.sensorData.lines[0].data);
+// update
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    setData(sensorAllData.slice(0, 4));
+  }, []);
 
   const recData = useDashStore((state) => state.recInfo.recData);
   const isReccording = useDashStore((state) => state.recInfo.isRecording);
@@ -52,7 +55,7 @@ export const DashBoard = () => {
           Math.random() * (1800 + (Math.floor(Math.random()*5) % 5 === 0 ? 4000 : 0)) + 5000
         ),
         pv: Math.floor(Math.random() * 1800 + 5000),
-        amt: Math.floor(Math.random() * 8000 - 2000),
+        amt: Math.floor(Math.random() * 8000 + 2000),
       });
     }, 2500);
     console.log(sensorAllData);
@@ -61,10 +64,10 @@ export const DashBoard = () => {
 
   useEffect(() => {
     if (Object.keys(newData).length > 0) {
-      setSensorData(newData);
-      setAppendedData(newData);
+      updateLineData(newData, 0);
+      setAppendedData(newData, 0);
     }
-  }, [newData, setSensorData, setAppendedData]);
+  }, [newData, updateLineData, setAppendedData]);
 
   useEffect(() => {
     if (zoomedOut && !zoomedIn) {
@@ -157,6 +160,10 @@ export const DashBoard = () => {
           />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
+          {/* .map((lineData, index) => (
+        <Line
+          key={index}
+          data={lineData} */}
           <Line
             animationDuration={0}
             type="linear"
