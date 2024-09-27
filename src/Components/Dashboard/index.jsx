@@ -55,7 +55,7 @@ export const DashBoard = () => {
           Math.random() * (1800 + (Math.floor(Math.random()*5) % 5 === 0 ? 4000 : 0)) + 5000
         ),
         pv: Math.floor(Math.random() * 1800 + 5000),
-        amt: Math.floor(Math.random() * 8000 + 2000),
+        val: Math.floor(Math.random() * 8100 + 2000),
       });
     }, 2500);
     console.log(sensorAllData);
@@ -167,7 +167,7 @@ export const DashBoard = () => {
           <Line
             animationDuration={0}
             type="linear"
-            dataKey="amt"
+            dataKey="val"
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorUv)"
