@@ -13,16 +13,18 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import { fromUnixTime, getMinutes, getSeconds } from 'date-fns';
+import CustomTooltip from "../CustomTooltip";
 
 export const DashBoard = () => {
   const [newData, setNewData] = useState({});
 
-  const sensorAllData = useDashStore((state) => state.sensorData.lines[0].data);
+  const sensorAllData = useDashStore((state) => state.sensorData.lines[1].data);
 // update
   const [data, setData] = useState([]);
-  useEffect(() => {
-    setData(sensorAllData.slice(0, 4));
-  }, []);
+  // useEffect(() => {
+  //   setData(sensorAllData.slice(0, 4));
+  // }, []);
 
   const recData = useDashStore((state) => state.recInfo.recData);
   const isReccording = useDashStore((state) => state.recInfo.isRecording);
@@ -46,28 +48,28 @@ export const DashBoard = () => {
   const prevDeps = useRef([false, "dataMin", "dataMax"]);
 
   // creation of dummy data
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log(sensorAllData.length + 1);
-      setNewData({
-        name: sensorAllData.length + 1, //`${
-        uv: Math.floor(
-          Math.random() * (1800 + (Math.floor(Math.random()*5) % 5 === 0 ? 4000 : 0)) + 5000
-        ),
-        pv: Math.floor(Math.random() * 1800 + 5000),
-        val: Math.floor(Math.random() * 8100 + 2000),
-      });
-    }, 2500);
-    console.log(sensorAllData);
-    return () => clearInterval(interval);
-  }, [sensorAllData.length]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     console.log(sensorAllData.length + 1);
+  //     setNewData({
+  //       name: sensorAllData.length + 1, //`${
+  //       uv: Math.floor(
+  //         Math.random() * (1800 + (Math.floor(Math.random()*5) % 5 === 0 ? 4000 : 0)) + 5000
+  //       ),
+  //       pv: Math.floor(Math.random() * 1800 + 5000),
+  //       val: Math.floor(Math.random() * 8100 + 2000),
+  //     });
+  //   }, 2500);
+  //   console.log(sensorAllData);
+  //   return () => clearInterval(interval);
+  // }, [sensorAllData.length]);
 
-  useEffect(() => {
-    if (Object.keys(newData).length > 0) {
-      updateLineData(newData, 0);
-      setAppendedData(newData, 0);
-    }
-  }, [newData, updateLineData, setAppendedData]);
+  // useEffect(() => {
+  //   if (Object.keys(newData).length > 0) {
+  //     updateLineData(newData, 0);
+  //     setAppendedData(newData, 0);
+  //   }
+  // }, [newData, updateLineData, setAppendedData]);
 
   useEffect(() => {
     if (zoomedOut && !zoomedIn) {
@@ -114,6 +116,15 @@ export const DashBoard = () => {
     setMouseUped(true);
   };
 
+  // const formatXAxis = (epoch) => {
+  //   //too many renders
+  //   //console.log('two many renders')
+  //   const date = new Date(epoch / 1000);
+  //   const minutes = date.getMinutes();
+  //   const seconds = date.getSeconds();
+  //   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"`;
+  // };
+
   return (
     <div className="z-50 mt-4 rounded-lg bg-white py-6 shadow-2xl border border-black sm:px-6 h-[60vh] border-dashed">
       <ResponsiveContainer width="100%" height="100%">
@@ -148,7 +159,18 @@ export const DashBoard = () => {
             allowDataOverflow
             dataKey="name"
             domain={[left, right]}
-            type="number"
+            minTickGap={20}
+            tickFormatter={(epoch) => {
+              if (!isNaN(epoch)) {
+                const utcDate = fromUnixTime(epoch);
+                console.log(utcDate)
+                const minutes = getMinutes(utcDate/1000);
+                const seconds = getSeconds(utcDate/1000)
+                return `${minutes.toString().padStart(2, '0')}.${seconds.toString().padStart(2, '0')}"`
+              }
+              return epoch;
+            }}
+            type="category"
             xAxisId="0"
           />
           <YAxis
@@ -159,7 +181,9 @@ export const DashBoard = () => {
             type="number"
           />
           <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip />
+          <Tooltip
+            //content={<CustomTooltip />}
+          />
           {/* .map((lineData, index) => (
         <Line
           key={index}
@@ -167,7 +191,7 @@ export const DashBoard = () => {
           <Line
             animationDuration={0}
             type="linear"
-            dataKey="val"
+            dataKey="pv"
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorUv)"

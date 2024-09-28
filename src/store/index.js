@@ -14,31 +14,31 @@ export const useDashStore = create(() => ({
           {
             name: 1,
             uv: 4000,
-            pv: 2400,
+            pv: 24,
             val: 2401,
           },
           {
             name: 2,
             uv: 3000,
-            pv: 1398,
+            pv: 18,
             val: 2210,
           },
           {
             name: 3,
             uv: 2000,
-            pv: 6800,
+            pv: 68,
             val: 2290,
           },
           {
             name: 4,
             uv: 2780,
-            pv: 3908,
+            pv: 39,
             val: 2025,
           },
           {
             name: 5,
             uv: 2780,
-            pv: 3908,
+            pv: 39,
             val: 3001,
           },
         ],
@@ -48,7 +48,20 @@ export const useDashStore = create(() => ({
       {
         name: 'Line 2',
         index: 1,
-        data: [],
+        data: [
+          {
+            name: 1,
+            uv: 0,
+            pv: 24,
+            val: 10,
+          },
+          {
+            name: 2,
+            uv: 0,
+            pv: 58,
+            val: 40,
+          },
+        ],
         showLine: true,
         newData: null,
       },

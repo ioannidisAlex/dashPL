@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useDashStore } from "../../store";
+import { updateLineData, setAppendedData } from "../../store";
 import mqtt from 'mqtt';
 
 function RabbitMQConsumer() {
@@ -6,6 +8,16 @@ function RabbitMQConsumer() {
   const [status, setStatus] = useState('Disconnected');
   const topic = 'my/topic';
   const [client, setClient] = useState(null); // Store MQTT client in state
+
+  const [newData, setNewData] = useState({});
+  const sensorAllData = useDashStore((state) => state.sensorData.lines[1].data);
+
+  useEffect(() => {
+    if (Object.keys(newData).length > 0) {
+      updateLineData(newData, 1);
+      setAppendedData(newData, 1);
+    }
+  }, [newData, updateLineData, setAppendedData]);
 
   useEffect(() => {
     // Connect to RabbitMQ via Web-MQTT
@@ -29,7 +41,35 @@ function RabbitMQConsumer() {
     });
 
     mqttClient.on('message', (topic, message) => {
-      setMessages(prev => [...prev, message.toString()]);
+      try {
+        const jsonData = JSON.parse(message.toString());
+  
+        const timestamp = new Date(jsonData.timestamp);
+        const withoutmsTimestamp = timestamp.toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          timeZoneName: 'short'
+        });
+        const milliseconds = timestamp.getMilliseconds().toString().padStart(3, '0');
+
+        //const minutesSeconds = `${timestamp.getMinutes()}.${timestamp.getSeconds().toString().padStart(2, '0')}`;
+        const epoch = (Math.floor(timestamp.getTime()));
+        //console.log(epoch);
+        setNewData({
+          name: epoch,
+          uv: 2730,
+          pv: jsonData.humidity,
+          val: 2030, 
+        });
+        console.log(sensorAllData)
+
+        setMessages(prev => [...prev, JSON.stringify(jsonData)]);
+      } catch (error) {
+        console.error('Error parsing JSON or handling timestamp:', error);        }
     });
 
     mqttClient.on('error', (error) => {
@@ -47,18 +87,10 @@ function RabbitMQConsumer() {
       mqttClient.end();
       setClient(null);
     };
-  }, [topic]);
+  }, [sensorAllData.length, topic]);
 
   return (
-    <div>
-      <h2>Status: {status}</h2>
-      <h2>Received Messages:</h2>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
-    </div>
+    <></>
   );
 }
 
