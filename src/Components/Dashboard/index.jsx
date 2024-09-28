@@ -45,7 +45,7 @@ export const DashBoard = () => {
     // resetZoom,
   } = useDashStore((state) => state.zoom);
 
-  const prevDeps = useRef([false, "dataMin", "dataMax"]);
+  const prevDeps = useRef([false, 'dataMin', 'dataMax']);
 
   // creation of dummy data
   // useEffect(() => {
@@ -74,9 +74,9 @@ export const DashBoard = () => {
   useEffect(() => {
     if (zoomedOut && !zoomedIn) {
       setData(sensorAllData);
-      setLeftRight("dataMin", "dataMax");
+      setLeftRight('dataMin', 'dataMax');
       //resetZoom();
-      console.log("datachanged And out mode activated");
+      console.log('datachanged And out mode activated');
     }
   }, [zoomedOut, sensorAllData, zoomedIn]);
 
@@ -100,17 +100,17 @@ export const DashBoard = () => {
       if (mouseUped) {
         zoom();
         setMouseUped(false);
-        setRefAreaLeft("");
-        setRefAreaRight("");
+        setRefAreaLeft('');
+        setRefAreaRight('');
       }
       prevDeps.current = [false, refAreaLeft, refAreaRight];
     }
   }, [mouseUped, refAreaLeft, refAreaRight]);
 
   const handleMouseUp = () => {
-    if (refAreaLeft === refAreaRight || refAreaRight === "") {
-      setRefAreaLeft("");
-      setRefAreaRight("");
+    if (refAreaLeft === refAreaRight || refAreaRight === '') {
+      setRefAreaLeft('');
+      setRefAreaRight('');
       return;
     }
     setMouseUped(true);
@@ -126,7 +126,7 @@ export const DashBoard = () => {
   // };
 
   return (
-    <div className="z-50 mt-4 rounded-lg bg-white py-6 shadow-2xl border border-black sm:px-6 h-[60vh] border-dashed">
+    <div className="z-50 select-none mt-4 rounded-lg bg-white py-6 shadow-2xl border border-black sm:px-6 h-[60vh] border-dashed">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           onAnimationStart={() => {}}
@@ -195,7 +195,11 @@ export const DashBoard = () => {
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorUv)"
-            dot={{ strokeWidth: 0.2, stroke:"#555" , r: 4.3 - (3.1 * (1 - Math.exp(-0.05 * data.length))) }}
+            dot={{
+              strokeWidth: 0.2,
+              stroke: '#555',
+              r: 4.3 - 3.1 * (1 - Math.exp(-0.05 * data.length)),
+            }}
             xAxisId="0"
             yAxisId="5"
           />
