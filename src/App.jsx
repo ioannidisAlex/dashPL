@@ -7,6 +7,7 @@ import { Button } from "./Components/Button";
 import { RecButton } from "./Components/Navbar/RecButton";
 import { DashBoard } from "./Components/Dashboard";
 import { useForm, FormProvider } from "react-hook-form";
+import RabbitMQConsumer from "./Components/RabbitMQConsumer";
 
 const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
@@ -28,6 +29,7 @@ function App() {
                 <span className="text-sm">{now.slice(6,8) + `"`}</span>
               </p>
             </div>
+            <RabbitMQConsumer/>
             <div className="flex justify-between">
               <h1 className="tracking-tight text-3xl font-semibold">
                 wind

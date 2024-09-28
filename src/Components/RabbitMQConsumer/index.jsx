@@ -1,61 +1,65 @@
 import { useEffect, useState } from 'react';
-import amqp from 'amqplib';
+import mqtt from 'mqtt';
 
-export const RabbitMQConsumer = () => {
-    const [messages, setMessages] = useState([]);
-    const queueName = 'f_queue';
-  
-    const establishConnection = async () => {
-        try {
-            const connection = await amqp.connect(process.env.REACT_APP_CLOUDAMQP_URL);
-            const channel = await connection.createChannel();
-            await channel.assertQueue(queueName);
-            return { connection, channel };
-        } catch (error) {
-            console.error('Error connecting to RabbitMQ:', error);
-            return null; // handle the error waymindfully
+function RabbitMQConsumer() {
+  const [messages, setMessages] = useState([]);
+  const [status, setStatus] = useState('Disconnected');
+  const topic = 'my/topic';
+  const [client, setClient] = useState(null); // Store MQTT client in state
+
+  useEffect(() => {
+    // Connect to RabbitMQ via Web-MQTT
+    const mqttClient = mqtt.connect('ws://localhost:15675/ws', {
+      username: 'guest',
+      password: 'guest',
+      reconnectPeriod: 1000,
+    });
+
+    setClient(mqttClient);
+
+    mqttClient.on('connect', () => {
+      console.log('Connected to RabbitMQ via Web-MQTT');
+      setStatus('Connected');
+
+      mqttClient.subscribe(topic, (err) => {
+        if (err) {
+          console.error('Subscription error:', err);
         }
+      });
+    });
+
+    mqttClient.on('message', (topic, message) => {
+      setMessages(prev => [...prev, message.toString()]);
+    });
+
+    mqttClient.on('error', (error) => {
+      console.error('Connection error:', error);
+      setStatus('Connection error');
+    });
+
+    mqttClient.on('close', () => {
+      console.log('Connection to RabbitMQ closed');
+      setStatus('Disconnected');
+    });
+
+    // Cleanup
+    return () => {
+      mqttClient.end();
+      setClient(null);
     };
+  }, [topic]);
 
-    const startConsuming = async (channel) => {
-        channel.consume(queueName, (message) => {
-            const data = message.content.toString();
-            setMessages(prevMessages => [...prevMessages, data]);
-            channel.ack(message);
-        }, { noAck: false });
-    };
+  return (
+    <div>
+      <h2>Status: {status}</h2>
+      <h2>Received Messages:</h2>
+      <ul>
+        {messages.map((msg, index) => (
+          <li key={index}>{msg}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
-    useEffect(() => {
-        let connection, channel;
-
-        const initialize = async () => {
-            const result = await establishConnection();
-            if (result) {
-                connection = result.connection;
-                channel = result.channel;
-                startConsuming(channel);
-            }
-        };
-        initialize();
-
-        return () => {
-            if (channel) {
-                channel.close();
-            }
-            if (connection) {
-                connection.close();
-            }
-        };
-    }, []);
-
-    return (
-        <div>
-            <h2>Received Messages:</h2>
-            <ul>
-                {messages.map((message, index) => (
-                    <li key={index}>{message}</li>
-                ))}
-            </ul>
-        </div>
-    );
-};
+export default RabbitMQConsumer;
