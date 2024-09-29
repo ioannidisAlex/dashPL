@@ -32,7 +32,7 @@ function App() {
             <RabbitMQConsumer/>
             <div className="flex justify-between">
               <h1 className="tracking-tight text-3xl font-semibold">
-                wind
+                humidity
               </h1>
               {zoomedIn ? (
                 <Button

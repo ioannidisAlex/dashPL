@@ -48,20 +48,7 @@ export const useDashStore = create(() => ({
       {
         name: 'Line 2',
         index: 1,
-        data: [
-          {
-            name: 1,
-            uv: 0,
-            pv: 24,
-            val: 10,
-          },
-          {
-            name: 2,
-            uv: 0,
-            pv: 58,
-            val: 40,
-          },
-        ],
+        data: [],
         showLine: true,
         newData: null,
       },

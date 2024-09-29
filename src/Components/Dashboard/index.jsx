@@ -108,6 +108,7 @@ export const DashBoard = () => {
   }, [mouseUped, refAreaLeft, refAreaRight]);
 
   const handleMouseUp = () => {
+    console.log("how many renders");
     if (refAreaLeft === refAreaRight || refAreaRight === '') {
       setRefAreaLeft('');
       setRefAreaRight('');
@@ -115,15 +116,6 @@ export const DashBoard = () => {
     }
     setMouseUped(true);
   };
-
-  // const formatXAxis = (epoch) => {
-  //   //too many renders
-  //   //console.log('two many renders')
-  //   const date = new Date(epoch / 1000);
-  //   const minutes = date.getMinutes();
-  //   const seconds = date.getSeconds();
-  //   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"`;
-  // };
 
   return (
     <div className="z-50 select-none mt-4 rounded-lg bg-white py-6 shadow-2xl border border-black sm:px-6 h-[60vh] border-dashed">
@@ -159,16 +151,19 @@ export const DashBoard = () => {
             allowDataOverflow
             dataKey="name"
             domain={[left, right]}
-            minTickGap={20}
+            minTickGap={200}
+            // ticks={sensorAllData.map((item) => {
+            // for not just rendering
             tickFormatter={(epoch) => {
+              console.log(epoch);
               if (!isNaN(epoch)) {
                 const utcDate = fromUnixTime(epoch);
-                console.log(utcDate)
+                console.log(epoch);
                 const minutes = getMinutes(utcDate/1000);
                 const seconds = getSeconds(utcDate/1000)
                 return `${minutes.toString().padStart(2, '0')}.${seconds.toString().padStart(2, '0')}"`
               }
-              return epoch;
+              return `{epoch}`;
             }}
             type="category"
             xAxisId="0"
@@ -182,14 +177,14 @@ export const DashBoard = () => {
           />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip
-            //content={<CustomTooltip />}
+            content={<CustomTooltip />}
           />
           {/* .map((lineData, index) => (
         <Line
           key={index}
           data={lineData} */}
           <Line
-            animationDuration={0}
+            isAnimationActive={false}
             type="linear"
             dataKey="pv"
             stroke="#8884d8"
