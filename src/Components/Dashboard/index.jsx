@@ -167,13 +167,15 @@ export const DashBoard = () => {
             }}
             type="category"
             xAxisId="0"
+            //label={{ value: 'time', position: 'insideBottom', dy: 10 }}
           />
           <YAxis
             className="select-none"
             allowDataOverflow
-            domain={[bottom, top]}
+            domain={[0, 100]} //{[bottom, top]}
             yAxisId="5"
             type="number"
+            label={{ value: 'Humidity (%)', angle: -90, position: 'insideLeft', dx: -10, dy: 30 }}
           />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip
