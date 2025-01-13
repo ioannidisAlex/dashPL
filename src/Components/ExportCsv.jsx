@@ -6,15 +6,15 @@ import { useDashStore } from "../store";
 export const ExportCSV = () => {
   const { saveAsCsv } = useJsonToCsv();
   const kata = useDashStore((state) => state.recInfo.recData);
-  const filename = "values";
-  const fields = { "name": "N", "val": "Temp"};
+  const filename = "valuesOfSensor";
+  const fields = { name: "Timestamp", val: "Humidity"};
 
   return (
     <Button label="Download Csv" onClick={() => saveAsCsv({
       data: kata.map((d) => {
         return {
-          name: d.name,
-          val: d.val,
+          name: d.uv.toString().replace(/,/g, ' of'),
+          val: d.pv,
         };
       }),
       fields: fields,

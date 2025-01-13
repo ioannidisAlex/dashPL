@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./output.css";
 import { setDialogState, setZoomedOut, useDashStore } from "./store";
 import { Header } from "./Components/Navbar/Header";
 import { Dialog } from "./Components/Dialog";
 import { Button } from "./Components/Button";
 import { RecButton } from "./Components/Navbar/RecButton";
+import { ExportAsPNG } from "./Components/ExportAsPNG";
 import { DashBoard } from "./Components/Dashboard";
 import { useForm, FormProvider } from "react-hook-form";
 import RabbitMQConsumer from "./Components/RabbitMQConsumer";
@@ -15,14 +16,18 @@ function App() {
   const methods = useForm();
   console.log(methods.formState);
   const zoomedIn = useDashStore((state) => state.zoom.zoomedIn);
+  const [title, setTitle] = useState("humidity");
+  const [description, setDescription] = useState("Description");
+  const dashboardRef = useRef(null);
+
   return (
     <div className="h-screen relative flex flex-col justify-between ">
       <FormProvider {...methods}>
-        <Dialog/>
+        <Dialog setTitle={setTitle} setDescription={setDescription} />
       </FormProvider>
       <div>
         <Header />
-        <div className=" h-52 z-50">
+        <div className=" h-52 z-50" ref={dashboardRef}>
           <div className=" py-10 px-20 ">
             <div>
               <p className="text-slate-500">{now.slice(0,5)+ `.`}
@@ -31,8 +36,8 @@ function App() {
             </div>
             <RabbitMQConsumer/>
             <div className="flex justify-between">
-              <h1 className="tracking-tight text-3xl font-semibold">
-                humidity
+              <h1 className="tracking-tight text-3xl font-semibold" title={description}>
+                {title}
               </h1>
               {zoomedIn ? (
                 <Button
@@ -46,7 +51,7 @@ function App() {
               )}
               <div className="flex">
                 <RecButton />
-
+                <ExportAsPNG elementRef={dashboardRef} fileName="dashboard" />
                 <Button
                   label="Edit"
                   onClick={() => {

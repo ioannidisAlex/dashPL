@@ -6,9 +6,9 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import EditForm from "../EditDashboardForm";
+import EditForm from "../EditForm";
 
-export const Dialog = () => {
+export const Dialog = ({ setTitle, setDescription }) => {
   const isOpen = useDashStore((state) => state.dialogIsOpen);
   return (
     <Transition appear show={isOpen}>
@@ -28,7 +28,7 @@ export const Dialog = () => {
               leaveTo="opacity-0 transform-[scale(95%)]"
             >
               <DialogPanel style={{backgroundColor: "#bbf2"}} className="w-full max-w-md rounded-xl p-6 backdrop-blur-2xl">
-                {/* <EditForm onClickOfItsButton={() => setDialogState(false)}/> */}
+                <EditForm onClickOfItsButton={() => setDialogState(false)} setTitle={setTitle} setDescription={setDescription}/> 
                 
               </DialogPanel>
             </TransitionChild>

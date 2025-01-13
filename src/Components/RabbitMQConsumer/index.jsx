@@ -58,12 +58,11 @@ function RabbitMQConsumer() {
 
         //const minutesSeconds = `${timestamp.getMinutes()}.${timestamp.getSeconds().toString().padStart(2, '0')}`;
         const epoch = (Math.floor(timestamp.getTime()));
-        //console.log(epoch);
         setNewData({
           name: epoch,
-          uv: 2730,
+          uv: withoutmsTimestamp,
           pv: jsonData.humidity,
-          val: 2030, 
+          val: NaN, 
         });
         console.log(sensorAllData)
 
